@@ -1,0 +1,22 @@
+name: Auto PR
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Créer la pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base main --head "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --body "PR créée automatiquement" || echo "PR déjà existante"
